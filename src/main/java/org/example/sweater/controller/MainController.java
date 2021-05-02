@@ -1,4 +1,4 @@
-package org.example.sweater;
+package org.example.sweater.controller;
 
 import org.example.sweater.domain.Message;
 import org.example.sweater.repository.MessageRepository;
@@ -16,7 +16,7 @@ import java.util.Map;
  */
 
 @Controller
-public class GreetingController  {
+public class MainController {
 
     // здесь будем хранить список месседжей
     @Autowired
