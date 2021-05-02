@@ -24,26 +24,19 @@ public class GreetingController  {
 
     // метод ожидает на вход параметр name
     // дефолтное значение у этого параметра - World, он не обязательный и у него имя "name"
-    @GetMapping("/greeting")
-    public String greeting(
-            @RequestParam(name = "name", required = false, defaultValue = "World") String name,
-            // model - это то куда мы будем складывать данные, которые мы хотим вернуть пользователю
-            Map<String, Object> model
-    ) {
-        // в поле "name" ложим то, что мы получили из этого name-a
-        model.put("name", name);
-        // возвращаем имя файла спринговому контейнеру, который мы хотим отобразить
+    @GetMapping("/")
+    public String greeting(Map<String, Object> model) {
         return "greeting";
     }
 
-    @GetMapping
+    @GetMapping("/main")
     public String main(Map<String, Object> model) {
         Iterable<Message> messages = messageRepository.findAll();
         model.put("messages", messages);
         return "main";
     }
 
-    @PostMapping
+    @PostMapping("/main")
     // @RequestParam -
     // выдергивает с наших запросов либо из <form>, если мы передаем post-ом
     // либо из url-a, если мы передаем get запрос (как в методе greeting)
