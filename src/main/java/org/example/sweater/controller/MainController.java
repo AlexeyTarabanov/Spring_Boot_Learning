@@ -1,8 +1,10 @@
 package org.example.sweater.controller;
 
 import org.example.sweater.domain.Message;
+import org.example.sweater.domain.User;
 import org.example.sweater.repository.MessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,14 +38,19 @@ public class MainController {
         return "main";
     }
 
-    @PostMapping("/main")
+    // add - добавляет сообщения
     // @RequestParam -
     // выдергивает с наших запросов либо из <form>, если мы передаем post-ом
     // либо из url-a, если мы передаем get запрос (как в методе greeting)
     // Spring вытягиваеит поля по имени, которе указали в аргументах
-    public String add(@RequestParam String text, @RequestParam String tag, Map<String, Object> model) {
+    @PostMapping("/main")
+    public String add(
+            @AuthenticationPrincipal User user,
+            @RequestParam String text,
+            @RequestParam String tag, Map<String, Object> model
+    ) {
         // сначала сохранили
-        Message message = new Message(text, tag);
+        Message message = new Message(text, tag, user);
         messageRepository.save(message);
         // взяли из репозитория
         Iterable<Message> messages = messageRepository.findAll();

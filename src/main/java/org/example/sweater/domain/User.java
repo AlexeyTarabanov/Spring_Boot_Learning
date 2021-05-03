@@ -1,6 +1,10 @@
 package org.example.sweater.domain;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import javax.persistence.*;
+import java.util.Collection;
 import java.util.Set;
 
 /**
@@ -22,11 +26,17 @@ import java.util.Set;
  Будет соединяться с текущей таблицей через user_id
  5. @Enumerated - устанавливаем, что Enum будем хранить в видже строки
 
+ Модифицируем User
+ 1. Имплементируем интерфейс UserDetails - он предоставляет основную информацию о пользователе.
+ Реализации не используются Spring Security напрямую в целях безопасности.
+ Они просто хранят информацию о пользователе, которая позже инкапсулируется в Authentication объекты.
+ Это позволяет хранить информацию о пользователях, не связанную с безопасностью
+ (такую как адреса электронной почты, номера телефонов и т. Д.), В удобном месте.
  */
 
 @Entity
 @Table(name = "usr")
-public class User   {
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -51,8 +61,38 @@ public class User   {
         return username;
     }
 
+    // указывает, истек ли срок действия учетной записи пользователя
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    // указывает, заблокирован пользователь или разблокирован
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    // указывает, истек ли срок действия учетных данных (пароля) пользователя
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    // указывает, включен или отключен пользователь
+    @Override
+    public boolean isEnabled() {
+        return isActive();
+    }
+
     public void setUsername(String userName) {
         this.username = userName;
+    }
+
+    // возвращает полномочия, предоставленные пользователю
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return getRoles();
     }
 
     public String getPassword() {
