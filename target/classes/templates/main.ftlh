@@ -4,6 +4,9 @@
 <@c.page>
     <div>
         <@l.logout />
+        <#-- для того, чтобы каждый раз не вводить вручную страницу пользователей
+        добавим ее -->
+        <span><a href="user">User List></a></span>
     </div>
     <div>
         <form method="post">
